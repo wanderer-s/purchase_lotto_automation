@@ -1,0 +1,13 @@
+{
+  "name": "lotto_automation",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "",
+  "main": "index.js",
+  "author": "wanderer",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "playwright": "^1.39.0"
+  }
+}

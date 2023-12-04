@@ -1,0 +1,21 @@
+name: Purchase Lotto Automation
+
+on:
+  schedule:
+    - cron: '0 1 * * 1' # KST 매주 월요일 오전 10시
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: action/checkout@v4
+      - uses: action/setup-node@v4
+        with:
+          node-version: 18
+      - name: Install Dependencies
+        run: npm ci
+      - name: Run script
+        run: npm run purchaseLotto
+        env:
+          ID: ${{secret.ID}}
+          PASSWORD: ${{PASSWORD}}

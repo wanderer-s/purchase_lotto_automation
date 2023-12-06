@@ -19,3 +19,5 @@ jobs:
         env:
           ID: ${{secret.ID}}
           PASSWORD: ${{PASSWORD}}
+          SLACK_TOKEN: ${{SLACK_TOKEN}}
+          SLACK_CHANNEL: ${{SLACK_CHANNEL}}

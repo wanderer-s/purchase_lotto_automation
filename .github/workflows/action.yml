@@ -2,7 +2,7 @@ name: Purchase Lotto Automation
 
 on:
   schedule:
-    - cron: '0 1 * * 1' # KST 매주 월요일 오전 10시
+    - cron: '0 1 * * 2' # KST 매주 화요일 오전 10시
 
 jobs:
   build:
@@ -17,7 +17,7 @@ jobs:
       - name: Run script
         run: npm run purchaseLotto
         env:
-          ID: ${{secret.ID}}
-          PASSWORD: ${{PASSWORD}}
-          SLACK_TOKEN: ${{SLACK_TOKEN}}
-          SLACK_CHANNEL: ${{SLACK_CHANNEL}}
+          ID: ${{secrets.ID}}
+          PASSWORD: ${{secrets.PASSWORD}}
+          SLACK_TOKEN: ${{secrets.SLACK_TOKEN}}
+          SLACK_CHANNEL: ${{secrets.SLACK_CHANNEL}}

@@ -2,7 +2,7 @@ name: Purchase Lotto Automation
 
 on:
   schedule:
-    - cron: '0 1 * * 3' # KST 매주 수요일 오전 10시
+    - cron: '0 1 * * 4' # KST 매주 목요일 오전 10시
 
 jobs:
   build:

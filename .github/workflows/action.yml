@@ -2,7 +2,7 @@ name: Purchase Lotto Automation
 
 on:
   schedule:
-    - cron: '0 1 * * 4' # KST 매주 목요일 오전 10시
+    - cron: '*/5 * * * *' #5분마다 실행
 
 jobs:
   build:
@@ -14,6 +14,8 @@ jobs:
           node-version: 18
       - name: Install Dependencies
         run: npm ci
+      - name: Install Browsers
+        run: npx playwright install
       - name: Run script
         run: npm run purchaseLotto
         env:

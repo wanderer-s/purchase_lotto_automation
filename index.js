@@ -7,10 +7,11 @@ import { sendMessage } from './slackClient.js';
  * @param {number} purchaseQuantity - 로또 구매 수량
  */
 async function purchaseLotto(purchaseQuantity) {
-  const browser = await chromium.launch({timeout: 0})
+  const browser = await chromium.launch()
 
   try {
     const page = await browser.newPage()
+    page.setDefaultTimeout(0)
     await page.goto("https://dhlottery.co.kr/user.do?method=login")
     await page.getByPlaceholder("아이디").fill(process.env.ID)
     await page.getByPlaceholder("비밀번호").fill(process.env.PASSWORD)

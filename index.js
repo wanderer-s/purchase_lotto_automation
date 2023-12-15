@@ -16,9 +16,8 @@ async function purchaseLotto(purchaseQuantity) {
     await page.getByPlaceholder("비밀번호").fill(process.env.PASSWORD)
     await page.getByRole("group").getByRole("link", {name: "로그인"}).click()
 
-    const balanceElement = page.locator("body > div:nth-child(1) > header > div.header_con > div.top_menu > form > div > ul.information > li.money > a:nth-child(2) > strong")
-    await balanceElement.waitFor()
-    const balance = parseInt((await balanceElement.textContent()).replace(",",""))
+    const balanceElement = await page.locator("body > div:nth-child(1) > header > div.header_con > div.top_menu > form > div > ul.information > li.money > a:nth-child(2) > strong").textContent()
+    const balance = parseInt(balanceElement.replace(",",""))
 
     await sendMessage(`TEST: 잔고는 ${balance} 원 입니다`)
 

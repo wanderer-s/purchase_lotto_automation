@@ -5,7 +5,6 @@ on:
     - cron: '0 1 * * 1' #KST 10am Mon
   workflow_dispatch:
 
-
 jobs:
   build:
     runs-on: ubuntu-latest

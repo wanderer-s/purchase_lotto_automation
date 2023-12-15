@@ -16,7 +16,7 @@ jobs:
       - name: Install Dependencies
         run: npm ci
       - name: Install Browsers
-        run: npx playwright install chromium
+        run: npx playwright install --with-deps chromium
       - name: Run script
         run: npm run purchaseLotto
         env:

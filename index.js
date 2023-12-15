@@ -7,7 +7,7 @@ import { sendMessage } from './slackClient.js';
  * @param {number} purchaseQuantity - 로또 구매 수량
  */
 async function purchaseLotto(purchaseQuantity) {
-  const browser = await chromium.launch()
+  const browser = await chromium.launch({headless: true})
 
   try {
     const page = await browser.newPage()
@@ -34,15 +34,17 @@ async function purchaseLotto(purchaseQuantity) {
     // timeout 시간을 늘려도 해결되지 않았음
 
      await page.goto("https://ol.dhlottery.co.kr/olotto/game/game645.do")
-     await page.getByText("자동번호발급").click()
+     await page.click("#tabWay2Buy > li:nth-child(2)")
      await page.selectOption("select", String(purchaseQuantity))
      await page.getByRole("button", { name: "확인"}).click()
      await page.getByRole("button", { name: "구매하기"}).click()
-     await page.locator("#popupLayerConfirm").getByRole("button", { name: "확인" }).click()
 
-     await page.locator("#report").getByRole("button", { name: "확인"}).click()
 
-     await sendMessage(`${purchaseQuantity}개 로또 구매 완료`)
+     // await page.locator("#popupLayerConfirm").getByRole("button", { name: "확인" }).click()
+     //
+     // await page.locator("#report").getByRole("button", { name: "확인"}).click()
+
+     // await sendMessage(`${purchaseQuantity}개 로또 구매 완료`)
   } catch (err) {
     console.error(err.message)
     await sendMessage(`Error: ${err.message}`)
@@ -52,3 +54,4 @@ async function purchaseLotto(purchaseQuantity) {
 }
 
 await purchaseLotto(1)
+

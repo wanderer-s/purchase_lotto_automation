@@ -11,13 +11,12 @@ async function purchaseLotto(purchaseQuantity) {
 
   try {
     const page = await browser.newPage()
-    page.setDefaultTimeout(0)
     await page.goto("https://dhlottery.co.kr/user.do?method=login")
     await page.getByPlaceholder("아이디").fill(process.env.ID)
     await page.getByPlaceholder("비밀번호").fill(process.env.PASSWORD)
     await page.getByRole("group").getByRole("link", {name: "로그인"}).click()
 
-    const balanceElement = await page.locator("body > div:nth-child(1) > header > div.header_con > div.top_menu > form > div > ul.information > li.money > a:nth-child(2) > strong").textContent()
+    const balanceElement = await page.locator("body > div:nth-child(1) > header > div.header_con > div.top_menu > form > div > ul.information > li.money > a:nth-child(2) > strong").textContent({timeout: 60000})
     const balance = parseInt(balanceElement.replace(",",""))
 
     await sendMessage(`TEST: 잔고는 ${balance} 원 입니다`)

@@ -7,7 +7,7 @@ import { sendMessage } from './slackClient.js';
  * @param {number} purchaseQuantity - 로또 구매 수량
  */
 async function purchaseLotto(purchaseQuantity) {
-  const browser = await chromium.launch({headless: true})
+  const browser = await chromium.launch()
 
   try {
     const page = await browser.newPage()
@@ -16,9 +16,9 @@ async function purchaseLotto(purchaseQuantity) {
     await page.getByPlaceholder("비밀번호").fill(process.env.PASSWORD)
     await page.getByRole("group").getByRole("link", {name: "로그인"}).click()
 
-    // const balanceElement = await page.locator("body > div:nth-child(1) > header > div.header_con > div.top_menu > form > div > ul.information > li.money > a:nth-child(2) > strong").textContent()
-    // const balance = parseInt(balanceElement.replace(",",""))
-
+    const balanceElement = await page.getByRole("link", {name: /\d,000원/}).textContent()
+    const balance = parseInt(balanceElement.replace(",",""))
+    console.log(balance)
     //  if(balance === 1000) {
     //    await sendMessage("잔액을 충전하지 않으면 다음 회차부터 구매할 수 없습니다")
     //  }
@@ -34,7 +34,7 @@ async function purchaseLotto(purchaseQuantity) {
     // timeout 시간을 늘려도 해결되지 않았음
 
      await page.goto("https://ol.dhlottery.co.kr/olotto/game/game645.do")
-     await page.click("#tabWay2Buy > li:nth-child(2)")
+     await page.getByRole("link", {name: "자동번호발급"}).click()
      await page.selectOption("select", String(purchaseQuantity))
      await page.getByRole("button", { name: "확인"}).click()
      await page.getByRole("button", { name: "구매하기"}).click()

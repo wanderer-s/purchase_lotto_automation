@@ -10,7 +10,8 @@ async function purchaseLotto(purchaseQuantity) {
   const browser = await chromium.launch()
 
   try {
-    const page = await browser.newPage()
+    const context = await browser.newContext()
+    const page = await context.newPage()
     await page.goto("https://dhlottery.co.kr/user.do?method=login")
     await page.getByPlaceholder("아이디").fill(process.env.ID)
     await page.getByPlaceholder("비밀번호").fill(process.env.PASSWORD)
@@ -19,6 +20,7 @@ async function purchaseLotto(purchaseQuantity) {
     const balanceElement = await page.getByRole("link", {name: /\d,000원/}).textContent()
     const balance = parseInt(balanceElement.replace(",",""))
     console.log(balance)
+    context.browser()
     //  if(balance === 1000) {
     //    await sendMessage("잔액을 충전하지 않으면 다음 회차부터 구매할 수 없습니다")
     //  }
@@ -33,11 +35,11 @@ async function purchaseLotto(purchaseQuantity) {
     // local에서는 문제가 없었으나 github actions 에서는 계속해서 timeour 발생하여 주석처리
     // timeout 시간을 늘려도 해결되지 않았음
 
-     await page.goto("https://ol.dhlottery.co.kr/olotto/game/game645.do")
-     await page.getByRole("link", {name: "자동번호발급"}).click()
-     await page.selectOption("select", String(purchaseQuantity))
-     await page.getByRole("button", { name: "확인"}).click()
-     await page.getByRole("button", { name: "구매하기"}).click()
+     // await page.goto("https://ol.dhlottery.co.kr/olotto/game/game645.do")
+     // await page.getByRole("link", {name: "자동번호발급"}).click()
+     // await page.selectOption("select", String(purchaseQuantity))
+     // await page.getByRole("button", { name: "확인"}).click()
+     // await page.getByRole("button", { name: "구매하기"}).click()
 
 
      // await page.locator("#popupLayerConfirm").getByRole("button", { name: "확인" }).click()

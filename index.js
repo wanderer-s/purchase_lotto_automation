@@ -7,7 +7,7 @@ import { sendMessage } from './slackClient.js';
  * @param {number} purchaseQuantity - 로또 구매 수량
  */
 async function purchaseLotto(purchaseQuantity) {
-  const browser = await chromium.launch()
+  const browser = await chromium.launch({timeout: 0})
 
   try {
     const page = await browser.newPage()
@@ -46,6 +46,7 @@ async function purchaseLotto(purchaseQuantity) {
     //  await sendMessage(`${purchaseQuantity}개 로또 구매 완료
     // 남은 잔고는 ${restOfBalance}원`)
   } catch (err) {
+    console.error(err.message)
     await sendMessage(`Error: ${err.message}`)
   } finally {
     await browser.close()

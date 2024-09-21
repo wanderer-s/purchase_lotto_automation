@@ -17,10 +17,14 @@ async function purchaseLotto(purchaseQuantity) {
     })
 
     const page = await context.newPage()
+
     await page.goto("https://dhlottery.co.kr/user.do?method=login")
+    await page.waitForTimeout(2000)
+
     await page.getByPlaceholder("아이디").fill(process.env.ID)
     await page.getByPlaceholder("비밀번호").fill(process.env.PASSWORD)
     await page.getByRole("group").getByRole("link", {name: "로그인"}).click()
+    await page.waitForTimeout(2000)
 
     const balanceElement = await page.getByRole("link", {name: /\d,000원/}).textContent()
     const balance = parseInt(balanceElement.replace(",",""))
@@ -35,6 +39,8 @@ async function purchaseLotto(purchaseQuantity) {
     }
 
     await page.goto("https://ol.dhlottery.co.kr/olotto/game/game645.do")
+    await page.waitForTimeout(2000)
+
     await page.getByRole("link", {name: "자동번호발급"}).click()
     await page.selectOption("select", String(purchaseQuantity))
     await page.getByRole("button", { name: "확인"}).click()

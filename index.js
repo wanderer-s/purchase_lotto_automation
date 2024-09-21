@@ -50,9 +50,9 @@ const purchaseLotto = async (purchaseQuantity) => {
     //   await browser.close()
     // }
 
-    await page.goto(LOTTO_PURCHASE_URL, { waitUntil:'domcontentloaded'})
+    await page.goto(LOTTO_PURCHASE_URL, { waitUntil:'domcontentloaded', timeout: 5000})
     console.log('init to lotto purchase page')
-    
+
     await page.getByRole("link", {name: "자동번호발급"}).click()
     await page.selectOption("select", String(purchaseQuantity))
     await page.getByRole("button", { name: "확인"}).click()

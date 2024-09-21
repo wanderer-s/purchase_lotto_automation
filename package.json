@@ -9,7 +9,8 @@
   "dependencies": {
     "@slack/web-api": "^6.10.0",
     "dotenv": "^16.3.1",
-    "playwright": "^1.39.0"
+    "playwright": "^1.39.0",
+    "user-agents": "^1.1.325"
   },
   "scripts": {
     "purchaseLotto": "node index.js"

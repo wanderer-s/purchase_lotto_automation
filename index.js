@@ -4,10 +4,13 @@ import UserAgent from 'user-agents';
 
 import { sendMessage } from './slackClient.js';
 
+const LOTTERY_LOGIN_URL = 'https://dhlottery.co.kr/user.do?method=login'
+const LOTTO_PURCHASE_URL = 'https://ol.dhlottery.co.kr/olotto/game/game645.do'
+
 /**
  * @param {number} purchaseQuantity - 로또 구매 수량
  */
-async function purchaseLotto(purchaseQuantity) {
+const purchaseLotto = async (purchaseQuantity) => {
   const browser = await chromium.launch()
   const userAgent = new UserAgent({ deviceCategory: 'desktop' })
 
@@ -18,16 +21,25 @@ async function purchaseLotto(purchaseQuantity) {
 
     const page = await context.newPage()
 
-    await page.goto("https://dhlottery.co.kr/user.do?method=login")
-    await page.waitForTimeout(2000)
+    await page.goto(LOTTERY_LOGIN_URL, {
+      waitUntil: 'domcontentloaded'
+    })
 
     await page.getByPlaceholder("아이디").fill(process.env.ID)
     await page.getByPlaceholder("비밀번호").fill(process.env.PASSWORD)
-    await page.getByRole("group").getByRole("link", {name: "로그인"}).click()
-    await page.waitForTimeout(2000)
+    await page.getByRole("group").getByRole("link", {name: "로그인"}).click({timeout: 1000})
+    console.log('login success')
 
-    const balanceElement = await page.getByRole("link", {name: /\d,000원/}).textContent()
-    const balance = parseInt(balanceElement.replace(",",""))
+    const moneyText = await page.textContent('li.money')
+    const balanceText = moneyText.replace(/[예치금충전출]/g,'').trim()
+    const balance = parseInt(balanceText.replace(",",""))
+
+    console.log(balance)
+
+    if (balance > 5000) {
+      await sendMessage('잔액이 5000보다 많아요')
+      return
+    }
 
     if(balance === 1000) {
       await sendMessage("잔액을 충전하지 않으면 다음 회차부터 구매할 수 없습니다")
@@ -38,18 +50,17 @@ async function purchaseLotto(purchaseQuantity) {
       await browser.close()
     }
 
-    await page.goto("https://ol.dhlottery.co.kr/olotto/game/game645.do")
-    await page.waitForTimeout(2000)
-
-    await page.getByRole("link", {name: "자동번호발급"}).click()
-    await page.selectOption("select", String(purchaseQuantity))
-    await page.getByRole("button", { name: "확인"}).click()
-    await page.getByRole("button", { name: "구매하기"}).click()
-
-    await page.locator("#popupLayerConfirm").getByRole("button", { name: "확인" }).click()
-
-    await page.locator("#report").getByRole("button", { name: "확인"}).click()
-    await sendMessage(`${purchaseQuantity}개 로또 구매 완료. 잔액: ${balance - 1000}`)
+    // await page.goto(LOTTO_PURCHASE_URL)
+    //
+    // await page.getByRole("link", {name: "자동번호발급"}).click()
+    // await page.selectOption("select", String(purchaseQuantity))
+    // await page.getByRole("button", { name: "확인"}).click()
+    // await page.getByRole("button", { name: "구매하기"}).click()
+    //
+    // await page.locator("#popupLayerConfirm").getByRole("button", { name: "확인" }).click()
+    //
+    // await page.locator("#report").getByRole("button", { name: "확인"}).click()
+    // await sendMessage(`${purchaseQuantity}개 로또 구매 완료. 잔액: ${balance - 1000}`)
   } catch (err) {
     console.error(err.message)
     await sendMessage(`Error: ${err.message}`)
